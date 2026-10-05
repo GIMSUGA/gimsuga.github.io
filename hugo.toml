@@ -1,0 +1,6 @@
+# Holding page only. The full site lives on the dev branch and reaches main
+# through one approved pull request (see README).
+baseURL = "https://gimsuga.github.io/"
+locale = "en-NG"
+title = "GIMSUGA Ebonyi State chapter"
+disableKinds = ["page", "section", "taxonomy", "term", "rss", "sitemap", "robotsTXT", "404"]

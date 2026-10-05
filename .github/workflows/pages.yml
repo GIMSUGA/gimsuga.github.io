@@ -1,0 +1,94 @@
+# Builds both branches into one GitHub Pages site:
+#   main -> https://gimsuga.github.io/          (the live site)
+#   dev  -> https://gimsuga.github.io/preview/  (the preview, never indexed)
+# No secrets are needed.
+name: Build and publish the site
+
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  HUGO_VERSION: "0.166.0"
+  LIVE_URL: "https://gimsuga.github.io/"
+  PREVIEW_URL: "https://gimsuga.github.io/preview/"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main (live)
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          path: live
+
+      - name: Check out dev (preview)
+        uses: actions/checkout@v7
+        with:
+          ref: dev
+          path: dev
+
+      - name: Install Hugo ${{ env.HUGO_VERSION }} (extended)
+        run: |
+          base="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}"
+          file="hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+          curl -fsSLO "${base}/${file}"
+          curl -fsSLO "${base}/hugo_${HUGO_VERSION}_checksums.txt"
+          grep " ${file}\$" "hugo_${HUGO_VERSION}_checksums.txt" | sha256sum -c -
+          tar -xzf "${file}" hugo
+          sudo mv hugo /usr/local/bin/hugo
+          hugo version
+
+      - name: Build the live site (main)
+        run: hugo --source live --minify --panicOnWarning --baseURL "${LIVE_URL}" --destination "${GITHUB_WORKSPACE}/public"
+
+      - name: Point the live editor at main
+        # static/admin/config.yml says branch dev (the preview). On the live site, /admin/ edits main.
+        run: |
+          if [ -f public/admin/config.yml ]; then
+            sed -i 's/^  branch: dev$/  branch: main/' public/admin/config.yml
+            grep -q '^  branch: main$' public/admin/config.yml || { echo "Could not point the live editor at main"; exit 1; }
+          fi
+
+      - name: Build the preview (dev)
+        run: hugo --source dev --environment preview --minify --panicOnWarning --baseURL "${PREVIEW_URL}" --destination "${GITHUB_WORKSPACE}/public/preview"
+
+      - name: Check the build
+        run: |
+          fail=0
+          test -f public/index.html || { echo "Live home page missing"; fail=1; }
+          test -f public/preview/index.html || { echo "Preview home page missing"; fail=1; }
+          if grep -rIl 'chat\.whatsapp\.com' public; then echo "A WhatsApp group invite link is in the site"; fail=1; fi
+          if grep -rIli '@gmail\.com' public; then echo "A Gmail address is in the site"; fail=1; fi
+          missing=$(grep -rL --include='*.html' 'noindex, nofollow' public/preview || true)
+          if [ -n "$missing" ]; then echo "Preview pages without noindex:"; echo "$missing"; fail=1; fi
+          if grep -rIl --include='*.html' --exclude-dir=preview 'Preview: not the live site' public; then echo "The preview banner is on the live site"; fail=1; fi
+          exit $fail
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

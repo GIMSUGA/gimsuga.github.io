@@ -1,0 +1,10 @@
+# Chapter facts, defined once and shown everywhere on the site.
+# whatsapp: the chapter's own number, country code first, digits only. Leave empty to hide the button.
+# email: the chapter's own address. Leave empty to hide the button.
+# Never a personal number or address, and never a WhatsApp group link.
+name: GIMSUGA
+chapter: Ebonyi State chapter
+covers: Abakaliki, Afikpo, Onueke, Ikwo, Ezza and the rest of Ebonyi State
+meets: Quarterly general meetings, usually on a Saturday in Abakaliki
+whatsapp: "2340000000000"
+email: membership@example.com

@@ -1,0 +1,29 @@
+{{- $c := hugo.Data.chapter -}}
+<!doctype html>
+<html lang="en-NG">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="light dark">
+  <title>{{ $c.name }} {{ $c.chapter }}</title>
+  <style>
+    :root { --ground: #1d4a3c; --ink: #f4f7f2; --muted: #c9d9cf; }
+    @media (prefers-color-scheme: dark) { :root { --ground: #111714; --ink: #e6ece8; --muted: #a3b0a8; } }
+    html, body { height: 100%; }
+    body { margin: 0; display: grid; place-items: center; background: var(--ground); color: var(--ink); font: 1rem/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; text-align: center; padding: 24px 16px; box-sizing: border-box; }
+    main { display: grid; gap: 12px; max-width: 34rem; }
+    p { margin: 0; }
+    .eyebrow { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+    h1 { margin: 0; font: 600 clamp(2rem, 1.5rem + 3vw, 3rem)/1.15 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+    .lede { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">{{ $c.name }}</p>
+    <h1>{{ $c.chapter }}</h1>
+    <p class="lede">Our website is being prepared. Please check back soon.</p>
+  </main>
+</body>
+</html>
