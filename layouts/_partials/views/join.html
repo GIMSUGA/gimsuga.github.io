@@ -1,0 +1,36 @@
+{{- $c := hugo.Data.chapter -}}
+{{- /* What we ask people to include (the list), and the same four details as lines of the pre-typed message. */ -}}
+{{- $include := slice "your name" "the year you graduated, and your department" "the town where you live" "a member you know, if any" -}}
+{{- $lines := slice (printf "Hello. I am an Imo State University graduate in Ebonyi State and I would like to join the %s %s." $c.name $c.chapter) "" -}}
+{{- $lines = $lines | append "My name:" "Year I graduated, and my department:" "Town where I live:" "A member I know (if any):" -}}
+{{- $message := delimit $lines "\n" -}}
+{{- /* urlquery writes spaces as "+", which email apps show literally; use %20 instead. */ -}}
+{{- $encoded := replace (urlquery $message) "+" "%20" -}}
+<div class="wrap page">
+  <h1>{{ .Title }}</h1>
+  <div class="prose join-steps">{{ .Content }}</div>
+  <p class="callout">This website never shows payment details and never takes payments. If anyone sends you a payment link claiming to be from the chapter, check with the executive first.</p>
+
+  <section class="card stack stack--tight" id="contact" aria-labelledby="contact-heading">
+    <h2 id="contact-heading">Contact the chapter</h2>
+    {{- if or $c.whatsapp $c.email }}
+    <p class="muted">This reaches the chapter's own contact, looked after by a chapter officer. The button starts a message for you.</p>
+    <p>Whichever way you get in touch, please include:</p>
+    <ul class="bullets">
+      {{- range $include }}
+      <li>{{ . }}</li>
+      {{- end }}
+    </ul>
+    <div class="btn-row">
+      {{- with replaceRE "[^0-9]" "" (printf "%v" ($c.whatsapp | default "")) }}
+      <a class="btn" href="https://wa.me/{{ . }}?text={{ $encoded | safeURL }}">Message the chapter on WhatsApp</a>
+      {{- end }}
+      {{- with $c.email }}
+      <a class="btn btn--quiet" href="mailto:{{ . }}?subject={{ replace (urlquery "Joining the chapter") "+" "%20" | safeURL }}&amp;body={{ $encoded | safeURL }}">Email the chapter</a>
+      {{- end }}
+    </div>
+    {{- else }}
+    <p class="muted">The chapter's contact details will be added here soon. Until then, please ask a member you know.</p>
+    {{- end }}
+  </section>
+</div>

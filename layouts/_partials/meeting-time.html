@@ -1,0 +1,7 @@
+{{- /* A meeting's start time, written "HH:MM" (or "HH:MM:SS"), shown as "11:00 am". */ -}}
+{{- $t := printf "%v" (.Params.time | default "") -}}
+{{- $out := "" -}}
+{{- if ge (len $t) 5 -}}
+  {{- $out = (time.AsTime (printf "2000-01-01T%s:00" (substr $t 0 5))).Format "3:04 pm" -}}
+{{- end -}}
+{{- return $out -}}

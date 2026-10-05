@@ -1,0 +1,198 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.229.0/schema/sveltia-cms.json
+# Sveltia CMS settings for the chapter site. Decap CMS reads the same format (see README.md).
+
+backend:
+  name: github
+  repo: GIMSUGA/gimsuga.github.io
+  # Edits from /preview/admin/ land on dev (the preview). The workflow switches the live copy at
+  # /admin/ to main when it builds the live site.
+  branch: dev
+
+# Uploaded photos. Templates make these paths relative to the site, so they work under /preview/ too.
+media_folder: static/images/uploads
+public_folder: /images/uploads
+
+media_libraries:
+  default:
+    config:
+      slugify_filename: true
+      # Phone photos are resized and converted to WebP in the browser before upload. Re-encoding should
+      # also drop their location (GPS) data. TO CHECK: upload a GPS-tagged photo and confirm the saved
+      # file has no location data before officers use this for real.
+      transformations:
+        raster_image:
+          format: webp
+          quality: 80
+          width: 1600
+          height: 1600
+
+collections:
+  - name: meetings
+    label: Meetings
+    label_singular: Meeting
+    description: Chapter meetings. Add the agenda before a meeting and the report after it.
+    folder: content/meetings
+    create: true
+    slug: "{{fields.date}}-{{slug}}"
+    summary: "{{date}} · {{title}}"
+    sortable_fields: [date, title]
+    fields:
+      - name: title
+        label: Meeting name
+        hint: For example, Quarterly general meeting.
+        widget: string
+      - name: date
+        label: Date
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+      - name: time
+        label: Start time
+        widget: datetime
+        type: time
+        format: HH:mm
+      - name: venue
+        label: Where
+        hint: The place and town, for example Chapter meeting venue, Abakaliki.
+        widget: string
+      - name: agenda
+        label: "Agenda: shown before the meeting"
+        hint: One item per line. Leave empty if it isn't ready yet.
+        widget: text
+        required: false
+      - name: photo
+        label: Photo (optional)
+        hint: Only with the agreement of everyone who can be recognised in it.
+        widget: image
+        required: false
+      - name: photo_alt
+        label: Describe the photo
+        hint: For people who can't see it, for example Members at the end-of-year get-together.
+        widget: string
+        required: false
+      - name: body
+        label: "Report: write this after the meeting"
+        hint: What was discussed and agreed. Leave empty until the meeting has happened.
+        widget: markdown
+        required: false
+
+  - name: work
+    label: Our work
+    label_singular: Piece of work
+    description: What the chapter has done, with a photo of the work.
+    folder: content/work
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - name: title
+        label: What was done
+        hint: Short, for example Computers donated.
+        widget: string
+      - name: month
+        label: Month (optional)
+        hint: Year and month, for example 2026-03. Leave empty if you're not sure.
+        widget: string
+        required: false
+        pattern: ['^(\d{4}-(0[1-9]|1[0-2]))?$', 'Write the year and month like 2026-03']
+      - name: where
+        label: Where
+        hint: For example, Imo State University, Owerri.
+        widget: string
+      - name: photo
+        label: Photo
+        hint: A photo of the work itself. Photos of people only with their agreement.
+        widget: image
+        required: false
+      - name: photo_alt
+        label: Describe the photo
+        hint: For people who can't see it, for example Rows of computers in a classroom.
+        widget: string
+        required: false
+      - name: photo_credit
+        label: Who took the photo
+        hint: Shown under the photo as "Photo:" and this name. Use only photos the chapter may publish.
+        widget: string
+        required: false
+      - name: body
+        label: What the chapter did
+        widget: markdown
+
+  - name: officers
+    label: Officers
+    files:
+      - name: officers
+        label: Officers
+        file: data/officers.yaml
+        fields:
+          - name: officers
+            label: Officers
+            label_singular: Officer
+            hint: In the order they should appear. Names appear only with the officer's agreement.
+            widget: list
+            root: true
+            summary: "{{role}}: {{name}}"
+            fields:
+              - { name: role, label: Role, widget: string, hint: "For example, Secretary." }
+              - { name: name, label: Name, widget: string }
+
+  - name: chapter
+    label: Chapter details
+    files:
+      - name: chapter
+        label: Chapter details
+        file: data/chapter.yaml
+        fields:
+          - name: name
+            label: Association
+            widget: string
+          - name: chapter
+            label: Chapter name
+            widget: string
+          - name: covers
+            label: Area covered
+            hint: The towns and areas the chapter covers.
+            widget: string
+          - name: meets
+            label: When the chapter meets
+            hint: For example, Quarterly general meetings, usually on a Saturday in Abakaliki.
+            widget: string
+          - name: whatsapp
+            label: Chapter WhatsApp number
+            hint: The chapter's own number, never a personal one or a group link. Country code first, digits only, for example 2348012345678. Leave empty to hide the WhatsApp button.
+            widget: string
+            required: false
+            pattern: ['^(\d{8,15})?$', 'Digits only, country code first, for example 2348012345678']
+          - name: email
+            label: Chapter email address
+            hint: The chapter's own address, never a personal one. Leave empty to hide the email button.
+            widget: string
+            required: false
+            pattern: ['^([^@\s]+@[^@\s]+\.[^@\s]+)?$', 'Write a full email address']
+
+  - name: pages
+    label: Pages
+    files:
+      - name: join
+        label: Join
+        file: content/join.md
+        fields:
+          - { name: title, label: Page title, widget: string }
+          - { name: view, widget: hidden, default: join }
+          - name: body
+            label: Text
+            hint: The contact buttons and the line about payments are added below this text automatically.
+            widget: markdown
+      - name: why-belong
+        label: Why belong
+        file: content/why-belong.md
+        fields:
+          - { name: title, label: Page title, widget: string }
+          - { name: view, widget: hidden, default: text }
+          - { name: body, label: Text, widget: markdown }
+      - name: privacy
+        label: Privacy
+        file: content/privacy.md
+        fields:
+          - { name: title, label: Page title, widget: string }
+          - { name: view, widget: hidden, default: text }
+          - { name: body, label: Text, widget: markdown }

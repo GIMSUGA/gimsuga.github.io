@@ -1,0 +1,11 @@
+{{- /* A photo from the content (context: dict "src" "alt" "credit" "class"). The src may start with "/"
+       (as the CMS writes it); it is made relative to the site so it works under /preview/ too. */ -}}
+{{- $path := strings.TrimPrefix "/" .src -}}
+{{- $w := 0 }}{{ $h := 0 -}}
+{{- with resources.Get $path }}{{ $w = .Width }}{{ $h = .Height }}{{ end -}}
+<figure class="work-photo{{ with .class }} {{ . }}{{ end }}">
+  <img src="{{ $path | relURL }}" alt="{{ .alt }}"{{ if $w }} width="{{ $w }}" height="{{ $h }}"{{ end }} loading="lazy" decoding="async">
+  {{- with .credit }}
+  <figcaption>Photo: {{ . | markdownify }}</figcaption>
+  {{- end }}
+</figure>

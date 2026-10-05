@@ -1,0 +1,25 @@
+{{- $state := partial "meeting-state.html" . -}}
+{{- $time := partial "meeting-time.html" . -}}
+<li class="event card" data-event-date="{{ .Date.Format "2006-01-02" }}" data-state="{{ $state }}">
+  <div class="event__date" aria-hidden="true">
+    <span class="event__day">{{ .Date.Format "2" }}</span>
+    <span class="event__month">{{ .Date.Format "Jan" }}</span>
+  </div>
+  <div class="event__body">
+    <h3 class="card__title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+    <p class="muted"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Mon 2 Jan 2006" }}</time>{{ with $time }} · {{ . }}{{ end }}</p>
+    {{- with .Params.venue }}
+    <p class="muted">{{ . }}</p>
+    {{- end }}
+    {{- with .Params.agenda }}
+    <details class="event__more" data-when="upcoming"><summary>Agenda</summary><p class="agenda">{{ . }}</p></details>
+    {{- else }}
+    <p class="muted" data-when="upcoming">Agenda to come.</p>
+    {{- end }}
+    {{- if strings.TrimSpace .RawContent }}
+    <details class="event__more" data-when="past"><summary>Report</summary><div class="prose">{{ .Content }}</div></details>
+    {{- else }}
+    <p class="muted" data-when="past">Report to come.</p>
+    {{- end }}
+  </div>
+</li>

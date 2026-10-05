@@ -1,29 +1,63 @@
+{{ define "main" }}
 {{- $c := hugo.Data.chapter -}}
-<!doctype html>
-<html lang="en-NG">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="color-scheme" content="light dark">
-  <title>{{ $c.name }} {{ $c.chapter }}</title>
-  <style>
-    :root { --ground: #1d4a3c; --ink: #f4f7f2; --muted: #c9d9cf; }
-    @media (prefers-color-scheme: dark) { :root { --ground: #111714; --ink: #e6ece8; --muted: #a3b0a8; } }
-    html, body { height: 100%; }
-    body { margin: 0; display: grid; place-items: center; background: var(--ground); color: var(--ink); font: 1rem/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; text-align: center; padding: 24px 16px; box-sizing: border-box; }
-    main { display: grid; gap: 12px; max-width: 34rem; }
-    p { margin: 0; }
-    .eyebrow { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
-    h1 { margin: 0; font: 600 clamp(2rem, 1.5rem + 3vw, 3rem)/1.15 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
-    .lede { color: var(--muted); }
-  </style>
-</head>
-<body>
-  <main>
-    <p class="eyebrow">{{ $c.name }}</p>
-    <h1>{{ $c.chapter }}</h1>
-    <p class="lede">Our website is being prepared. Please check back soon.</p>
-  </main>
-</body>
-</html>
+{{- $today := now.Format "2006-01-02" -}}
+{{- $upcoming := slice -}}
+{{- range (site.GetPage "/meetings").Pages.ByDate }}{{ if ge (.Date.Format "2006-01-02") $today }}{{ $upcoming = $upcoming | append . }}{{ end }}{{ end -}}
+<section class="hero">
+  <div class="wrap hero__inner">
+    <p class="eyebrow eyebrow--light">{{ $c.name }}</p>
+    <h1 class="hero__title">{{ $c.chapter }}</h1>
+    <p class="hero__lede">Imo State University graduates living and working across Ebonyi State: {{ $c.covers }}.</p>
+    <div class="hero__actions">
+      <a class="btn btn--light" href="{{ "meetings/" | relURL }}">Meetings</a>
+      <a class="btn btn--outline-light" href="{{ "join/" | relURL }}">How to join</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap stack home-body">
+  {{- /* With no JavaScript this shows the soonest meeting at build time; site.js re-picks by today's date. */}}
+  <section class="card card--feature" aria-labelledby="next-heading" data-next-event>
+    <h2 id="next-heading" class="eyebrow">Next meeting</h2>
+    {{- range $i, $m := $upcoming }}
+    {{- $time := partial "meeting-time.html" $m }}
+    <div class="next__item" data-event-date="{{ $m.Date.Format "2006-01-02" }}"{{ if $i }} hidden{{ end }}>
+      <p class="next__title"><a href="{{ $m.RelPermalink }}">{{ $m.Title }}</a></p>
+      <p class="next__when"><time datetime="{{ $m.Date.Format "2006-01-02" }}">{{ $m.Date.Format "Monday 2 January 2006" }}</time>{{ with $time }} · {{ . }}{{ end }}</p>
+      {{- with $m.Params.venue }}
+      <p class="muted">{{ . }}</p>
+      {{- end }}
+    </div>
+    {{- end }}
+    <p class="muted next__none"{{ if $upcoming }} hidden{{ end }}>No meeting scheduled yet.</p>
+    <a class="link-arrow" href="{{ "meetings/" | relURL }}">All meetings</a>
+  </section>
+
+  <section aria-labelledby="about-heading" class="stack stack--tight">
+    <h2 id="about-heading">About the chapter</h2>
+    <p>The {{ $c.chapter }} brings together graduates of Imo State University across the state. {{ $c.meets }}.</p>
+    <p>Membership of {{ $c.name }} comes through a chapter. New members are introduced by an existing member.</p>
+    <a class="link-arrow" href="{{ "why-belong/" | relURL }}">Why belong</a>
+  </section>
+
+  <section aria-labelledby="work-heading" class="stack stack--tight">
+    <h2 id="work-heading">Our work</h2>
+    <ul class="list-cards">
+      {{- range first 2 (partial "work-sorted.html" .) }}
+      <li class="card">
+        <p class="card__kicker">{{ partial "work-month.html" . }}</p>
+        <p class="card__title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
+        <p class="muted">{{ .Params.where }}</p>
+      </li>
+      {{- end }}
+    </ul>
+    <a class="link-arrow" href="{{ "our-work/" | relURL }}">The chapter's work</a>
+  </section>
+
+  <section class="card card--quiet" aria-labelledby="join-heading">
+    <h2 id="join-heading">IMSU graduate in Ebonyi State?</h2>
+    <p>New members join through introduction by an existing member. Don't know one yet? The chapter will put you in touch.</p>
+    <a class="btn" href="{{ "join/" | relURL }}">How to join</a>
+  </section>
+</div>
+{{ end }}

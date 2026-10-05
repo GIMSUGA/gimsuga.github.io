@@ -1,0 +1,22 @@
+{{ define "main" }}
+<div class="wrap page">
+  <h1>{{ .Title }}</h1>
+  <p class="lede">A record of what the chapter has done: what, where and when, with photographs of the work itself.</p>
+  <ul class="list-cards">
+    {{- range partial "work-sorted.html" . }}
+    {{- $w := . }}
+    <li class="card">
+      {{- with .Params.photo }}
+      {{ partial "photo.html" (dict "src" . "alt" ($w.Params.photo_alt | default "") "credit" $w.Params.photo_credit) }}
+      {{- end }}
+      <p class="card__kicker">{{ partial "work-month.html" . }}</p>
+      <h2 class="card__title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      <p class="muted">{{ .Params.where }}</p>
+      {{- with .Summary }}
+      <div class="prose">{{ . }}</div>
+      {{- end }}
+    </li>
+    {{- end }}
+  </ul>
+</div>
+{{ end }}

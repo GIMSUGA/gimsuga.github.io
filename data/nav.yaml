@@ -1,0 +1,16 @@
+# The menu, defined once: the top bar on wide screens and the tab bar on phones.
+- href: ""
+  label: Home
+  icon: home
+- href: meetings/
+  label: Meetings
+  icon: calendar
+- href: our-work/
+  label: Our work
+  icon: work
+- href: officers/
+  label: Officers
+  icon: people
+- href: join/
+  label: Join
+  icon: join

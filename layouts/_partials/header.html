@@ -1,0 +1,17 @@
+{{- $here := .RelPermalink -}}
+{{- $c := hugo.Data.chapter -}}
+<header class="topbar">
+  <div class="wrap topbar__inner">
+    <a class="brand" href="{{ "" | relURL }}">
+      <span class="brand__mark" aria-hidden="true">G</span>
+      <span class="brand__text"><strong>{{ $c.name }}</strong><small>{{ $c.chapter }}</small></span>
+    </a>
+    <nav class="topnav" aria-label="Main">
+      <ul>
+        {{- range hugo.Data.nav }}
+        <li><a href="{{ .href | relURL }}"{{ if partial "nav-current.html" (dict "href" .href "here" $here) }} aria-current="page"{{ end }}>{{ .label }}</a></li>
+        {{- end }}
+      </ul>
+    </nav>
+  </div>
+</header>

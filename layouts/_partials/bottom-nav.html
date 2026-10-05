@@ -1,0 +1,13 @@
+{{- $here := .RelPermalink -}}
+<nav class="bottomnav" aria-label="Main">
+  <ul>
+    {{- range hugo.Data.nav }}
+    <li>
+      <a href="{{ .href | relURL }}"{{ if partial "nav-current.html" (dict "href" .href "here" $here) }} aria-current="page"{{ end }}>
+        {{ partial "icon.html" .icon }}
+        <span>{{ .label }}</span>
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+</nav>

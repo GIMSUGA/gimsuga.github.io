@@ -1,0 +1,2 @@
+{{- /* "upcoming" or "past" when the site is built. The browser checks again (assets/js/site.js). */ -}}
+{{- return cond (ge (.Date.Format "2006-01-02") (now.Format "2006-01-02")) "upcoming" "past" -}}

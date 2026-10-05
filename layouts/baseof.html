@@ -1,0 +1,33 @@
+{{- $c := hugo.Data.chapter -}}
+<!doctype html>
+<html lang="en-NG">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  {{- if site.Params.preview }}
+  <meta name="robots" content="noindex, nofollow">
+  {{- end }}
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#1d4a3c">
+  <title>{{ if .IsHome }}{{ $c.name }} {{ $c.chapter }}{{ else }}{{ .Title }} · {{ $c.name }} {{ $c.chapter }}{{ end }}</title>
+  <meta name="description" content="{{ $c.name }} {{ $c.chapter }}: Imo State University graduates in {{ $c.covers }}.">
+  {{- with resources.Get "css/site.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+  {{- end }}
+  {{- with resources.Get "js/site.js" | minify | fingerprint }}
+  <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+  {{- end }}
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  {{- if site.Params.preview }}
+  <p class="preview-banner">Preview: not the live site. Content here may be made up.</p>
+  {{- end }}
+  {{ partial "header.html" . }}
+  <main id="main" tabindex="-1">
+    {{ block "main" . }}{{ end }}
+  </main>
+  {{ partial "footer.html" . }}
+  {{ partial "bottom-nav.html" . }}
+</body>
+</html>

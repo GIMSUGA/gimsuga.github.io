@@ -1,0 +1,3 @@
+{{- /* The chapter's work, latest first; items with no month go last. */ -}}
+{{- $s := site.GetPage "/work" -}}
+{{- return sort $s.Pages "Params.month" "desc" -}}

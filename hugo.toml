@@ -1,6 +1,32 @@
-# Holding page only. The full site lives on the dev branch and reaches main
-# through one approved pull request (see README).
 baseURL = "https://gimsuga.github.io/"
 locale = "en-NG"
 title = "GIMSUGA Ebonyi State chapter"
-disableKinds = ["page", "section", "taxonomy", "term", "rss", "sitemap", "robotsTXT", "404"]
+timeZone = "Africa/Lagos"
+# Meetings are dated in the future until they happen.
+buildFuture = true
+disableKinds = ["taxonomy", "term", "rss", "sitemap"]
+disableHugoGeneratorInject = true
+
+[permalinks.page]
+  meetings = "/meetings/:contentbasename/"
+  work = "/our-work/:contentbasename/"
+[permalinks.section]
+  work = "/our-work/"
+
+[markup.goldmark.renderer]
+  unsafe = false
+
+[params]
+  # The preview build (config/preview) turns this on: noindex on every page and a banner.
+  preview = false
+
+# Photos uploaded through the CMS are also mounted as assets so the templates can read their size.
+[[module.mounts]]
+  source = "static"
+  target = "static"
+[[module.mounts]]
+  source = "assets"
+  target = "assets"
+[[module.mounts]]
+  source = "static/images/uploads"
+  target = "assets/images/uploads"

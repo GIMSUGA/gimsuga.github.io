@@ -1,0 +1,14 @@
+{{ define "main" }}
+<article class="wrap page">
+  <a class="link-back" href="{{ "our-work/" | relURL }}">The chapter's work</a>
+  <header class="stack stack--tight">
+    <p class="card__kicker">{{ partial "work-month.html" . }}</p>
+    <h1>{{ .Title }}</h1>
+    <p class="muted">{{ .Params.where }}</p>
+  </header>
+  {{- with .Params.photo }}
+  {{ partial "photo.html" (dict "src" . "alt" ($.Params.photo_alt | default "") "credit" $.Params.photo_credit "class" "work-photo--large") }}
+  {{- end }}
+  <div class="prose">{{ .Content }}</div>
+</article>
+{{ end }}

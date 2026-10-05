@@ -1,0 +1,5 @@
+{{- /* True when the menu item (context: dict "href" "here") is this page or the section this page is in. */ -}}
+{{- $target := .href | relURL -}}
+{{- $cur := false -}}
+{{- if eq .href "" }}{{ $cur = eq .here $target }}{{ else }}{{ $cur = hasPrefix .here $target }}{{ end -}}
+{{- return $cur -}}

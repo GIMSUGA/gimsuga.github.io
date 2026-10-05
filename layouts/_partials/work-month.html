@@ -1,0 +1,1 @@
+{{- with .Params.month }}{{ (time (printf "%s-01" .)).Format "January 2006" }}{{ else }}Date to be confirmed{{ end -}}

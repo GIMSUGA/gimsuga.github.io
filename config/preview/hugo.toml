@@ -1,0 +1,3 @@
+# Used by the preview build (hugo --environment preview), published at /preview/ from the dev branch.
+[params]
+  preview = true
