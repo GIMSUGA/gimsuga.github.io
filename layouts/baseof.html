@@ -9,6 +9,9 @@
   {{- end }}
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#1d4a3c">
+  <link rel="icon" href="{{ "images/brand/favicon.ico" | relURL }}" sizes="48x48">
+  <link rel="icon" type="image/png" href="{{ "images/brand/favicon-32.png" | relURL }}" sizes="32x32">
+  <link rel="apple-touch-icon" href="{{ "images/brand/apple-touch-icon.png" | relURL }}">
   <title>{{ if .IsHome }}{{ $c.name }} {{ $c.chapter }}{{ else }}{{ .Title }} · {{ $c.name }} {{ $c.chapter }}{{ end }}</title>
   <meta name="description" content="{{ $c.name }} {{ $c.chapter }}: Imo State University graduates in {{ $c.covers }}.">
   {{- with resources.Get "css/site.css" | minify | fingerprint }}

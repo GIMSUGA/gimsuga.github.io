@@ -214,3 +214,9 @@ main:focus { outline: none; }
 .year > summary { cursor: pointer; display: flex; align-items: baseline; gap: 10px; min-height: 44px; padding: 8px 0; font-family: var(--serif); font-size: var(--step-1); font-weight: 600; border-bottom: 1px solid var(--rule); }
 .year > summary .year__count { font-family: var(--sans); font-size: var(--step--1); font-weight: 400; }
 .year[open] > summary { margin-bottom: 10px; }
+
+/* Logo */
+.brand__logo { flex: none; width: 40px; height: 40px; object-fit: contain; }
+.about { position: relative; }
+.about__seal { float: right; width: 96px; height: auto; margin: 0 0 8px 16px; }
+@media (min-width: 900px) { .about__seal { width: 120px; } }
