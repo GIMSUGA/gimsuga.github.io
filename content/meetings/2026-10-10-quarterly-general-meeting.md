@@ -1,7 +1,7 @@
 ---
 title: Quarterly general meeting
 date: 2026-10-10
-time: "11:00"
+time: 11:00
 venue: Chapter meeting venue, Abakaliki
 agenda: |-
   1. Opening prayer and apologies
@@ -10,4 +10,7 @@ agenda: |-
   4. The chapter website: what members will see
   5. Planning the end-of-year get-together
   6. Any other business
+  7. Website update
+photo: ''
+photo_alt: ''
 ---
