@@ -1,13 +1,25 @@
 # Made up for the preview. Real officers' names appear only with their agreement.
-- role: Chairman
-  name: Obinna Ekwueme-Ude
-- role: Vice Chairman
-  name: Ngozi Aniagolu-Ibe
-- role: Secretary
-  name: Chukwuemeka Ofoma
-- role: Treasurer
-  name: Ifeoma Uzodike
-- role: Public Relations Officer
-  name: Amarachi Nwosu-Kalu
-- role: Technical Officer
-  name: Kelechi Obiorah
+- office: Chairman
+  title: "Chief"
+  first_name: Obinna
+  surname: Ekwueme-Ude
+- office: Vice Chairman
+  title: ""
+  first_name: Ngozi
+  surname: Aniagolu-Ibe
+- office: Secretary
+  title: ""
+  first_name: Chukwuemeka
+  surname: Ofoma
+- office: Treasurer
+  title: "Dr."
+  first_name: Ifeoma
+  surname: Uzodike
+- office: Public Relations Officer
+  title: ""
+  first_name: Amarachi
+  surname: Nwosu-Kalu
+- office: Technical Officer
+  title: ""
+  first_name: Kelechi
+  surname: Obiorah

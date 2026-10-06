@@ -133,10 +133,12 @@ collections:
             hint: In the order they should appear. Names appear only with the officer's agreement.
             widget: list
             root: true
-            summary: "{{role}}: {{name}}"
+            summary: "{{office}}: {{title}} {{first_name}} {{surname}}"
             fields:
-              - { name: role, label: Role, widget: string, hint: "For example, Secretary." }
-              - { name: name, label: Name, widget: string }
+              - { name: office, label: Office, widget: string, hint: "For example, Secretary or Technical Officer." }
+              - { name: title, label: Title, widget: string, required: false, hint: "Optional. For example, Engr., Dr., Barr., Chief." }
+              - { name: first_name, label: First name, widget: string }
+              - { name: surname, label: Surname, widget: string }
 
   - name: chapter
     label: Chapter details
