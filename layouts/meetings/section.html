@@ -3,6 +3,9 @@
 {{- $upcoming := slice }}{{ $past := slice -}}
 {{- range .Pages.ByDate }}{{ if ge (.Date.Format "2006-01-02") $today }}{{ $upcoming = $upcoming | append . }}{{ end }}{{ end -}}
 {{- range .Pages.ByDate.Reverse }}{{ if lt (.Date.Format "2006-01-02") $today }}{{ $past = $past | append . }}{{ end }}{{ end -}}
+{{- /* Past meetings are grouped by year, newest year first. The newest year is open; earlier years fold
+       away, so the page stays short however many years of meetings build up. */ -}}
+{{- $years := slice }}{{ range $past }}{{ $y := .Date.Format "2006" }}{{ if not (in $years $y) }}{{ $years = $years | append $y }}{{ end }}{{ end -}}
 <div class="wrap page">
   <h1>{{ .Title }}</h1>
   <p class="lede">Chapter meetings and get-togethers. Each meeting shows its agenda before it happens and its report afterwards.</p>
@@ -17,9 +20,17 @@
 
   <section aria-labelledby="past-heading" class="stack stack--tight">
     <h2 id="past-heading">Past</h2>
-    <ul class="events events--past" data-events-past>
-      {{- range $past }}{{ partial "meeting-item.html" . }}{{ end }}
-    </ul>
+    <div class="years" data-events-past>
+      {{- range $i, $y := $years }}
+      {{- $inYear := where $past "Date.Year" (int $y) }}
+      <details class="year" data-year="{{ $y }}"{{ if eq $i 0 }} open{{ end }}>
+        <summary><span class="year__label">{{ $y }}</span> <span class="year__count muted" data-year-count>{{ len $inYear }} {{ if eq (len $inYear) 1 }}meeting{{ else }}meetings{{ end }}</span></summary>
+        <ul class="events events--past">
+          {{- range $inYear }}{{ partial "meeting-item.html" . }}{{ end }}
+        </ul>
+      </details>
+      {{- end }}
+    </div>
     <p class="muted" data-events-past-none{{ if $past }} hidden{{ end }}>No past meetings yet.</p>
   </section>
 </div>

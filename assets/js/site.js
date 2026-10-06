@@ -16,17 +16,38 @@
       el.setAttribute("data-state", el.getAttribute("data-event-date") < now ? "past" : "upcoming");
     });
 
-    // Meetings page: move meetings that have happened since the build into Past, newest first
+    // Meetings page: move meetings that have happened since the build into Past, into their year's
+    // group (made if needed), newest first. The newest year stays open; earlier years fold away.
     var upcoming = document.querySelector("[data-events-upcoming]");
     var past = document.querySelector("[data-events-past]");
     if (upcoming && past) {
       Array.prototype.slice.call(upcoming.querySelectorAll("[data-event-date]"))
         .filter(function (li) { return li.getAttribute("data-event-date") < now; })
-        .forEach(function (li) { past.insertBefore(li, past.firstChild); });
+        .forEach(function (li) {
+          var year = li.getAttribute("data-event-date").slice(0, 4);
+          var group = past.querySelector('[data-year="' + year + '"]');
+          if (!group) {
+            group = document.createElement("details");
+            group.className = "year";
+            group.setAttribute("data-year", year);
+            group.innerHTML = '<summary><span class="year__label">' + year + '</span> <span class="year__count muted" data-year-count></span></summary><ul class="events events--past"></ul>';
+            var later = Array.prototype.slice.call(past.querySelectorAll("[data-year]"))
+              .filter(function (g) { return g.getAttribute("data-year") < year; })[0];
+            past.insertBefore(group, later || null);
+          }
+          var list = group.querySelector("ul");
+          list.insertBefore(li, list.firstChild);
+        });
+      var groups = Array.prototype.slice.call(past.querySelectorAll("[data-year]"));
+      groups.forEach(function (g, i) {
+        var n = g.querySelectorAll("[data-event-date]").length;
+        g.querySelector("[data-year-count]").textContent = n + (n === 1 ? " meeting" : " meetings");
+        if (i === 0) g.open = true;
+      });
       var none = document.querySelector("[data-events-none]");
       if (none) none.hidden = upcoming.children.length > 0;
       var pastNone = document.querySelector("[data-events-past-none]");
-      if (pastNone) pastNone.hidden = past.children.length > 0;
+      if (pastNone) pastNone.hidden = groups.length > 0;
     }
 
     // Home page: the next meeting is the first one from today on

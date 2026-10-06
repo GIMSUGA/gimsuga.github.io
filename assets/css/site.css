@@ -208,3 +208,9 @@ main:focus { outline: none; }
   * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }
 .home-body > section > p { max-width: 70ch; }
+
+/* Past meetings grouped by year */
+.years { display: grid; gap: 10px; }
+.year > summary { cursor: pointer; display: flex; align-items: baseline; gap: 10px; min-height: 44px; padding: 8px 0; font-family: var(--serif); font-size: var(--step-1); font-weight: 600; border-bottom: 1px solid var(--rule); }
+.year > summary .year__count { font-family: var(--sans); font-size: var(--step--1); font-weight: 400; }
+.year[open] > summary { margin-bottom: 10px; }
