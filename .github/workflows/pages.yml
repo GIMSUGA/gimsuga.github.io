@@ -68,7 +68,11 @@ jobs:
           test -f public/index.html || { echo "Live home page missing"; fail=1; }
           test -f public/preview/index.html || { echo "Preview home page missing"; fail=1; }
           if grep -rIl 'chat\.whatsapp\.com' public; then echo "A WhatsApp group invite link is in the site"; fail=1; fi
-          if grep -rIli '@gmail\.com' public; then echo "A Gmail address is in the site"; fail=1; fi
+          # Only the chapter's own address (data/chapter.yaml, on each branch) may appear; any other Gmail fails.
+          allow_live=$(sed -n 's/^email: *//p' live/data/chapter.yaml | tr -d '"' | tr 'A-Z' 'a-z')
+          allow_dev=$(sed -n 's/^email: *//p' dev/data/chapter.yaml | tr -d '"' | tr 'A-Z' 'a-z')
+          others=$(grep -rIhoi '[A-Za-z0-9._%+-]*@gmail\.com' public | tr 'A-Z' 'a-z' | sort -u | grep -v -x -F -e "${allow_live:-none}" -e "${allow_dev:-none}" || true)
+          if [ -n "$others" ]; then echo "A Gmail address other than the chapter's own is in the site:"; echo "$others"; fail=1; fi
           missing=$(grep -rL --include='*.html' 'noindex, nofollow' public/preview || true)
           if [ -n "$missing" ]; then echo "Preview pages without noindex:"; echo "$missing"; fail=1; fi
           if grep -rIl --include='*.html' --exclude-dir=preview 'Preview: not the live site' public; then echo "The preview banner is on the live site"; fail=1; fi
