@@ -107,3 +107,5 @@ image transformations) would need adjusting.
 ## Built with
 
 Built with AI-assisted development (Claude Code).
+
+<!-- Approval test 1, 2026-10-06: a publisher merges their own change. -->
