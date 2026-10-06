@@ -8,7 +8,8 @@
 {{- $years := slice }}{{ range $past }}{{ $y := .Date.Format "2006" }}{{ if not (in $years $y) }}{{ $years = $years | append $y }}{{ end }}{{ end -}}
 <div class="wrap page">
   <h1>{{ .Title }}</h1>
-  <p class="lede">Chapter meetings and get-togethers. Each meeting shows its agenda before it happens and its report afterwards.</p>
+  {{- $c := hugo.Data.chapter }}
+  <p class="lede">{{ $c.meets }}. Each meeting shows its agenda before it happens and a short report afterwards.</p>
 
   <section aria-labelledby="upcoming-heading" class="stack stack--tight">
     <h2 id="upcoming-heading">Upcoming</h2>
