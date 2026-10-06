@@ -7,6 +7,9 @@ backend:
   # Edits from /preview/admin/ land on dev (the preview). The workflow switches the live copy at
   # /admin/ to main when it builds the live site.
   branch: dev
+  # "Sign in with GitHub" goes through the chapter's own sign-in helper (sveltia-cms-auth on Cloudflare
+  # Workers), not Netlify's. Setup steps: README.md, "Editor sign-in".
+  base_url: https://gimsuga-cms-auth.gimsuga-ebonyi.workers.dev
 
 # Uploaded photos. Templates make these paths relative to the site, so they work under /preview/ too.
 media_folder: static/images/uploads
