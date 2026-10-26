@@ -6,8 +6,9 @@ view: text
 personal information described here.
 
 **What the site shows.** The names and roles of the chapter's officers, shown with their agreement. The
-chapter's meetings and their reports, and a record of the chapter's work. Photographs of people appear only
-with their consent, and are taken down on request.
+dates of the chapter's meetings, and a record of the chapter's work. Photographs of people appear only with
+their consent. Everything on this site is public, and earlier versions of it stay publicly available even
+after a change, so nothing private is ever put here.
 
 **Getting in touch.** If you message or email the chapter from the Join page, your message goes to the
 chapter's own contact, looked after by an officer. It is used only to answer you and to put you in touch with

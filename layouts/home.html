@@ -15,20 +15,24 @@
 </section>
 
 <div class="wrap stack home-body">
-  {{- /* With no JavaScript this shows the soonest meeting at build time; site.js re-picks by today's date. */}}
+  {{- /* The soonest meeting an officer has added, if it is no later than the next first Sunday; otherwise
+         the next first Sunday itself, worked out by the site. site.js picks again by today's date. */}}
+  {{- $fs := partial "first-sunday.html" . }}
+  {{- $shown := "" }}{{ range first 1 $upcoming }}{{ if le (.Date.Format "2006-01-02") ($fs.Format "2006-01-02") }}{{ $shown = .RelPermalink }}{{ end }}{{ end }}
   <section class="card card--feature" aria-labelledby="next-heading" data-next-event>
     <h2 id="next-heading" class="eyebrow">Next meeting</h2>
-    {{- range $i, $m := $upcoming }}
+    {{- range $m := $upcoming }}
     {{- $time := partial "meeting-time.html" $m }}
-    <div class="next__item" data-event-date="{{ $m.Date.Format "2006-01-02" }}"{{ if $i }} hidden{{ end }}>
+    <div class="next__item" data-event-date="{{ $m.Date.Format "2006-01-02" }}"{{ if ne $m.RelPermalink $shown }} hidden{{ end }}>
       <p class="next__title"><a href="{{ $m.RelPermalink }}">{{ $m.Title }}</a></p>
       <p class="next__when"><time datetime="{{ $m.Date.Format "2006-01-02" }}">{{ $m.Date.Format "Monday 2 January 2006" }}</time>{{ with $time }} · {{ . }}{{ end }}</p>
-      {{- with $m.Params.venue }}
-      <p class="muted">{{ . }}</p>
-      {{- end }}
     </div>
     {{- end }}
-    <p class="muted next__none"{{ if $upcoming }} hidden{{ end }}>No meeting scheduled yet.</p>
+    <div class="next__item" data-first-sunday{{ if $shown }} hidden{{ end }}>
+      <p class="next__title">Monthly general meeting</p>
+      <p class="next__when"><time data-first-sunday-date datetime="{{ $fs.Format "2006-01-02" }}">{{ $fs.Format "Monday 2 January 2006" }}</time></p>
+    </div>
+    <p class="muted">The time and place are shared with members.</p>
     <a class="link-arrow" href="{{ "meetings/" | relURL }}">All meetings</a>
   </section>
 
@@ -42,10 +46,11 @@
     <a class="link-arrow" href="{{ "why-belong/" | relURL }}">Why belong</a>
   </section>
 
+  {{- with partial "work-sorted.html" . }}
   <section aria-labelledby="work-heading" class="stack stack--tight">
     <h2 id="work-heading">Our work</h2>
     <ul class="list-cards">
-      {{- range first 2 (partial "work-sorted.html" .) }}
+      {{- range first 2 . }}
       <li class="card">
         <p class="card__kicker">{{ partial "work-month.html" . }}</p>
         <p class="card__title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></p>
@@ -55,6 +60,7 @@
     </ul>
     <a class="link-arrow" href="{{ "our-work/" | relURL }}">The chapter's work</a>
   </section>
+  {{- end }}
 
   <section class="card card--quiet" aria-labelledby="join-heading">
     <h2 id="join-heading">IMSU graduate in Ebonyi State?</h2>

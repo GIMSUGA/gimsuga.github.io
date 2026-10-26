@@ -2,6 +2,9 @@
 <div class="wrap page">
   <h1>{{ .Title }}</h1>
   <p class="lede">A record of what the chapter has done: what, where and when, with photographs of the work itself.</p>
+  {{- if not (partial "work-sorted.html" .) }}
+  <p class="muted">The chapter's work will be recorded here soon.</p>
+  {{- end }}
   <ul class="list-cards">
     {{- range partial "work-sorted.html" . }}
     {{- $w := . }}

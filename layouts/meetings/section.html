@@ -9,14 +9,15 @@
 <div class="wrap page">
   <h1>{{ .Title }}</h1>
   {{- $c := hugo.Data.chapter }}
-  <p class="lede">{{ $c.meets }}. Each meeting shows its agenda before it happens and a short report afterwards.</p>
+  {{- $fs := partial "first-sunday.html" . }}
+  <p class="lede">{{ $c.meets }}.</p>
 
   <section aria-labelledby="upcoming-heading" class="stack stack--tight">
     <h2 id="upcoming-heading">Upcoming</h2>
     <ul class="events" data-events-upcoming>
       {{- range $upcoming }}{{ partial "meeting-item.html" . }}{{ end }}
     </ul>
-    <p class="muted" data-events-none{{ if $upcoming }} hidden{{ end }}>No upcoming meetings yet.</p>
+    <p class="muted" data-events-none{{ if $upcoming }} hidden{{ end }}>The next monthly general meeting is on <time data-first-sunday-date datetime="{{ $fs.Format "2006-01-02" }}">{{ $fs.Format "Monday 2 January 2006" }}</time>.</p>
   </section>
 
   <section aria-labelledby="past-heading" class="stack stack--tight">

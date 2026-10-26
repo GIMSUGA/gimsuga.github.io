@@ -1,0 +1,15 @@
+{{- /* The next first Sunday of a month, from today on, when the site is built (the chapter's usual meeting
+       day, G-058). The browser works it out again from its own date (assets/js/site.js). */ -}}
+{{- $today := time.AsTime (now.Format "2006-01-02") -}}
+{{- $thisMonth := time.AsTime (printf "%s-01" ($today.Format "2006-01")) -}}
+{{- $out := "" -}}
+{{- range $add := slice 0 1 -}}
+  {{- if not $out -}}
+    {{- $first := $thisMonth.AddDate 0 $add 0 -}}
+    {{- $sunday := $first.AddDate 0 0 (mod (sub 7 (int $first.Weekday)) 7) -}}
+    {{- if ge ($sunday.Format "2006-01-02") ($today.Format "2006-01-02") -}}
+      {{- $out = $sunday -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

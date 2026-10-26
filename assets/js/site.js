@@ -1,5 +1,6 @@
 // GIMSUGA Ebonyi State chapter. The only script on the site: it re-checks which meetings are upcoming or
-// past using today's date, so the pages stay right between builds. Without it, the build-time order shows.
+// past, and the next first Sunday, using today's date, so the pages stay right between builds. Without it,
+// the build-time dates show.
 (function () {
   "use strict";
 
@@ -50,14 +51,36 @@
       if (pastNone) pastNone.hidden = groups.length > 0;
     }
 
-    // Home page: the next meeting is the first one from today on
+    // The next first Sunday of a month (the chapter's usual meeting day), wherever the site shows it
+    var fs = firstSunday(now);
+    document.querySelectorAll("[data-first-sunday-date]").forEach(function (el) {
+      el.setAttribute("datetime", fs.iso);
+      el.textContent = fs.label;
+    });
+
+    // Home page: the first meeting an officer added from today on, if it is no later than the next first
+    // Sunday; otherwise the next first Sunday itself
     var next = document.querySelector("[data-next-event]");
     if (next) {
       var items = Array.prototype.slice.call(next.querySelectorAll("[data-event-date]"));
       var found = items.filter(function (el) { return el.getAttribute("data-event-date") >= now; })[0];
+      if (found && found.getAttribute("data-event-date") > fs.iso) found = null;
       items.forEach(function (el) { el.hidden = el !== found; });
-      var noneNext = next.querySelector(".next__none");
-      if (noneNext) noneNext.hidden = !!found;
+      var auto = next.querySelector("[data-first-sunday]");
+      if (auto) auto.hidden = !!found;
+    }
+  }
+
+  // "YYYY-MM-DD" in, the first Sunday of this month (if not yet passed) or next month out
+  function firstSunday(now) {
+    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var y = +now.slice(0, 4), m = +now.slice(5, 7) - 1;
+    for (var add = 0; add < 2; add++) {
+      var first = new Date(y, m + add, 1);
+      var d = new Date(first.getFullYear(), first.getMonth(), 1 + (7 - first.getDay()) % 7);
+      var iso = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      if (iso >= now) return { iso: iso, label: days[d.getDay()] + " " + d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear() };
     }
   }
 

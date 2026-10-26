@@ -33,7 +33,10 @@ collections:
   - name: meetings
     label: Meetings
     label_singular: Meeting
-    description: Chapter meetings. Add the agenda before a meeting and the report after it.
+    description: >-
+      Chapter meetings: the name, date, time and agenda, all public. The site shows the next first Sunday by
+      itself, so add a meeting only to give its time or agenda, or for a meeting on another day. The place and
+      the meeting's notes go to members on WhatsApp, never here: everything on this site is public, forever.
     folder: content/meetings
     create: true
     slug: "{{fields.date}}-{{slug}}"
@@ -42,8 +45,14 @@ collections:
     fields:
       - name: title
         label: Meeting name
-        hint: For example, Quarterly general meeting.
-        widget: string
+        hint: Need a different name? Ask the Technical Officer to add it to this list.
+        widget: select
+        options:
+          - Monthly general meeting
+          - Annual general meeting
+          - Extraordinary general meeting
+          - End-of-year get-together
+        default: Monthly general meeting
       - name: date
         label: Date
         widget: datetime
@@ -54,29 +63,10 @@ collections:
         widget: datetime
         type: time
         format: HH:mm
-      - name: venue
-        label: Where
-        hint: The place and town, for example Chapter meeting venue, Abakaliki.
-        widget: string
       - name: agenda
         label: "Agenda: shown before the meeting"
-        hint: One item per line. Leave empty if it isn't ready yet.
+        hint: One item per line. Public, so nothing about people or money. Leave empty if it isn't ready yet.
         widget: text
-        required: false
-      - name: photo
-        label: Photo (optional)
-        hint: Only with the agreement of everyone who can be recognised in it.
-        widget: image
-        required: false
-      - name: photo_alt
-        label: Describe the photo
-        hint: For people who can't see it, for example Members at the end-of-year get-together.
-        widget: string
-        required: false
-      - name: body
-        label: "Report: write this after the meeting"
-        hint: What was discussed and agreed. Leave empty until the meeting has happened.
-        widget: markdown
         required: false
 
   - name: work
@@ -159,7 +149,7 @@ collections:
             widget: string
           - name: meets
             label: When the chapter meets
-            hint: For example, Quarterly general meetings, usually on a Saturday in Abakaliki.
+            hint: For example, The chapter meets on the first Sunday of every month. Never the place.
             widget: string
           - name: whatsapp
             label: Chapter WhatsApp number

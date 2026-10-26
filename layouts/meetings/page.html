@@ -1,4 +1,6 @@
 {{ define "main" }}
+{{- /* One meeting. Public: name, date, time and, before the meeting, its agenda. The venue and the meeting's
+       notes are shared with members only, never on this site (G-058). */ -}}
 {{- $state := partial "meeting-state.html" . -}}
 {{- $time := partial "meeting-time.html" . -}}
 <article class="wrap page" data-event-date="{{ .Date.Format "2006-01-02" }}" data-state="{{ $state }}">
@@ -8,27 +10,14 @@
     <p class="card__kicker" data-when="past">Past meeting</p>
     <h1>{{ .Title }}</h1>
     <p class="next__when"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Monday 2 January 2006" }}</time>{{ with $time }} · {{ . }}{{ end }}</p>
-    {{- with .Params.venue }}
-    <p class="muted">{{ . }}</p>
-    {{- end }}
+    <p class="muted">The place is shared with members.</p>
   </header>
-  {{- with .Params.photo }}
-  {{ partial "photo.html" (dict "src" . "alt" ($.Params.photo_alt | default "") "class" "work-photo--large") }}
-  {{- end }}
   <section aria-labelledby="agenda-heading" data-when="upcoming">
     <h2 id="agenda-heading">Agenda</h2>
     {{- with .Params.agenda }}
     <p class="agenda">{{ . }}</p>
     {{- else }}
     <p class="muted">Agenda to come.</p>
-    {{- end }}
-  </section>
-  <section aria-labelledby="report-heading" data-when="past">
-    <h2 id="report-heading">Report</h2>
-    {{- if strings.TrimSpace .RawContent }}
-    <div class="prose">{{ .Content }}</div>
-    {{- else }}
-    <p class="muted">Report to come.</p>
     {{- end }}
   </section>
 </article>
