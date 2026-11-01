@@ -13,25 +13,20 @@
 
   <section class="card stack stack--tight" id="contact" aria-labelledby="contact-heading">
     <h2 id="contact-heading">Contact the chapter</h2>
-    {{- if or $c.whatsapp $c.email }}
+    {{- with $c.email }}
     <p class="muted">This reaches the chapter's own contact, looked after by a chapter officer. The buttons start a message for you.</p>
-    <p>Whichever way you get in touch, please include:</p>
+    <p>In your message, please include:</p>
     <ul class="bullets">
       {{- range $include }}
       <li>{{ . }}</li>
       {{- end }}
     </ul>
     <div class="btn-row">
-      {{- with replaceRE "[^0-9]" "" (printf "%v" ($c.whatsapp | default "")) }}
-      <a class="btn" href="https://wa.me/{{ . }}?text={{ $encoded | safeURL }}">Message the chapter on WhatsApp</a>
-      {{- end }}
-      {{- with $c.email }}
       {{- $subject := replace (urlquery "Joining the chapter") "+" "%20" }}
       <a class="btn" href="mailto:{{ . }}?subject={{ $subject | safeURL }}&amp;body={{ $encoded | safeURL }}">Email the chapter</a>
       {{- /* For a device whose email app doesn't open: copies the message, with the address on top, to paste
              into any email. The address is never shown as text on the page. Shown only where copying works. */}}
       <button class="btn btn--quiet" type="button" data-copy hidden data-copy-text="{{ printf "To: %s\nSubject: Joining the chapter\n\n%s" . $message }}">Copy the message</button>
-      {{- end }}
     </div>
     {{- else }}
     <p class="muted">The chapter's contact details will be added here soon. Until then, please ask a member you know.</p>

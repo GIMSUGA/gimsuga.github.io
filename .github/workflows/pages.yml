@@ -67,7 +67,8 @@ jobs:
           fail=0
           test -f public/index.html || { echo "Live home page missing"; fail=1; }
           test -f public/preview/index.html || { echo "Preview home page missing"; fail=1; }
-          if grep -rIl 'chat\.whatsapp\.com' public; then echo "A WhatsApp group invite link is in the site"; fail=1; fi
+          # No WhatsApp numbers or links anywhere on the site (G-063).
+          if grep -rIl -E 'chat\.whatsapp\.com|wa\.me/|api\.whatsapp\.com' public; then echo "A WhatsApp link is in the site"; fail=1; fi
           # Only the chapter's own address (data/chapter.yaml, on each branch) may appear; any other Gmail fails.
           allow_live=$(sed -n 's/^email: *//p' live/data/chapter.yaml | tr -d '"' | tr 'A-Z' 'a-z')
           allow_dev=$(sed -n 's/^email: *//p' dev/data/chapter.yaml | tr -d '"' | tr 'A-Z' 'a-z')

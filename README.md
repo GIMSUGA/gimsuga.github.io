@@ -12,7 +12,8 @@ and never takes payments.
 The repository is public and its history is kept forever, including anything later deleted.
 
 - Payment details, bank details, or anything that takes payments.
-- WhatsApp group invite links (`chat.whatsapp.com`). The chapter's own number goes in `data/chapter.yaml`.
+- WhatsApp numbers or links of any kind (`wa.me`, `chat.whatsapp.com`); the build fails on one. Contact is
+  by the chapter's own email only.
 - Personal phone numbers or email addresses, and secrets or `.env` files.
 - Photographs of people without their recorded agreement.
 
@@ -56,15 +57,15 @@ Officers need a GitHub account with write access to this repository. Sveltia off
 - **Sign in using access token.** Works with no helper. The officer creates a fine-grained personal access
   token on GitHub with *Contents: read and write* on this repository only, and pastes it in. Fine for testing.
 
-What officers can edit: meetings, our work, officers, chapter details (name, area, meeting habit, WhatsApp
-number, email) and the Join, Why belong and Privacy pages. Photos are resized and converted to WebP in the
+What officers can edit: meetings, our work, officers, chapter details (name, area, meeting habit, where
+members get the time and place, email) and the Join, Why belong and Privacy pages. Photos are resized and converted to WebP in the
 browser before upload.
 
 ## Content
 
 | File | Holds |
 |---|---|
-| `data/chapter.yaml` | Chapter facts, shown everywhere. The WhatsApp and email buttons on Join appear only if set. |
+| `data/chapter.yaml` | Chapter facts, shown everywhere. The email buttons on Join appear only if the email is set. |
 | `data/officers.yaml` | Officers, in display order. |
 | `data/nav.yaml` | The menu (top bar and phone tab bar). |
 | `content/meetings/*.md` | One file per meeting. Front matter: date, time, venue, agenda. The text below is the report. |
