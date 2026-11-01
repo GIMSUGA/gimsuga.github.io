@@ -65,7 +65,7 @@
     var upcoming = document.querySelector("[data-events-upcoming]");
     var past = document.querySelector("[data-events-past]");
     if (upcoming && past) {
-      Array.prototype.slice.call(upcoming.querySelectorAll("[data-event-date]"))
+      Array.prototype.slice.call(upcoming.querySelectorAll("[data-event-date]:not([data-auto-next])"))
         .filter(function (li) { return li.getAttribute("data-event-date") < now; })
         .forEach(function (li) {
           // A cancelled meeting drops off once its date has passed
@@ -90,13 +90,29 @@
         g.querySelector("[data-year-count]").textContent = n + (n === 1 ? " meeting" : " meetings");
         if (i === 0) g.open = true;
       });
-      // "The next monthly general meeting is on ..." unless an officer-added meeting (not cancelled) comes first
-      var none = document.querySelector("[data-events-none]");
-      if (none) {
-        none.hidden = Array.prototype.slice.call(upcoming.querySelectorAll("[data-event-date]")).some(function (li) {
-          return !li.hasAttribute("data-cancelled") && li.getAttribute("data-event-date") <= fsIso;
-        });
-      }
+      // The next monthly general meeting (today included) and, on meeting day, the one after, unless an
+      // officer added a meeting on that date themselves. Then everything in date order.
+      var added = Array.prototype.slice.call(upcoming.querySelectorAll("[data-event-date]:not([data-auto-next]):not([data-cancelled])"))
+        .map(function (li) { return li.getAttribute("data-event-date"); });
+      var fs2 = fs && fsIso === now ? firstSunday(isoOf(new Date(fs.getFullYear(), fs.getMonth(), fs.getDate() + 1)), cancelled) : null;
+      [[fs, "1"], [fs2, "2"]].forEach(function (pair) {
+        var li = upcoming.querySelector('[data-auto-next="' + pair[1] + '"]');
+        if (!li) return;
+        var d = pair[0];
+        if (!d) { li.hidden = true; return; }
+        var iso = isoOf(d);
+        li.setAttribute("data-event-date", iso);
+        li.querySelector("[data-auto-day]").textContent = d.getDate();
+        li.querySelector("[data-auto-month]").textContent = MONTHS[d.getMonth()].slice(0, 3);
+        var t = li.querySelector("[data-auto-date]");
+        t.setAttribute("datetime", iso);
+        t.textContent = shortLabel(d);
+        li.querySelector("[data-today]").setAttribute("data-today", iso);
+        li.hidden = added.indexOf(iso) >= 0;
+      });
+      Array.prototype.slice.call(upcoming.children)
+        .sort(function (a, b) { return (a.getAttribute("data-event-date") || "").localeCompare(b.getAttribute("data-event-date") || ""); })
+        .forEach(function (li) { upcoming.appendChild(li); });
 
       // The last monthly general meeting, unless an officer added that meeting themselves
       var last = document.querySelector("[data-last-meeting]");

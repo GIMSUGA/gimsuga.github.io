@@ -1,0 +1,17 @@
+{{- /* The first Sunday of a month on or after .from ("YYYY-MM-DD"), or strictly after it if .after is true,
+       skipping any an officer has cancelled. site.js does the same in the browser. */ -}}
+{{- $from := .from -}}
+{{- $after := .after | default false -}}
+{{- $start := time.AsTime (printf "%s-01" (substr $from 0 7)) -}}
+{{- $cancelled := partial "meetings-cancelled.html" . -}}
+{{- $out := "" -}}
+{{- range $add := slice 0 1 2 3 4 5 6 -}}
+  {{- if not $out -}}
+    {{- $first := $start.AddDate 0 $add 0 -}}
+    {{- $sunday := $first.AddDate 0 0 (mod (sub 7 (int $first.Weekday)) 7) -}}
+    {{- $iso := $sunday.Format "2006-01-02" -}}
+    {{- $ok := cond $after (gt $iso $from) (ge $iso $from) -}}
+    {{- if and $ok (not (in $cancelled $iso)) -}}{{- $out = $sunday -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

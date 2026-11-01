@@ -1,0 +1,16 @@
+{{- /* A monthly general meeting worked out from the first Sunday (no page of its own). .n is 1 for the next one
+       (today included) and 2 for the one after, shown only on meeting day. site.js sets the dates again by
+       today's date and hides one an officer has added themselves. */ -}}
+{{- $d := .date -}}
+{{- $iso := "" }}{{ with $d }}{{ $iso = .Format "2006-01-02" }}{{ end -}}
+<li class="event card" data-auto-next="{{ .n }}" data-event-date="{{ $iso }}"{{ if .hidden }} hidden{{ end }}>
+  <div class="event__date" aria-hidden="true">
+    <span class="event__day" data-auto-day>{{ with $d }}{{ .Format "2" }}{{ end }}</span>
+    <span class="event__month" data-auto-month>{{ with $d }}{{ .Format "Jan" }}{{ end }}</span>
+  </div>
+  <div class="event__body">
+    <p class="card__kicker" data-today="{{ $iso }}"{{ if ne $iso (now.Format "2006-01-02") }} hidden{{ end }}>Today</p>
+    <h3 class="card__title">Monthly general meeting</h3>
+    <p class="muted"><time data-auto-date datetime="{{ $iso }}">{{ with $d }}{{ .Format "Mon 2 Jan 2006" }}{{ end }}</time></p>
+  </div>
+</li>

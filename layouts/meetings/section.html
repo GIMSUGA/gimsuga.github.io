@@ -12,16 +12,22 @@
   {{- $c := hugo.Data.chapter }}
   {{- $fs := partial "first-sunday.html" . }}
   {{- $fsIso := $fs.Format "2006-01-02" }}
-  {{- /* An officer-added meeting that is not cancelled and no later than the next first Sunday stands in for
-         the "next monthly general meeting" line, as on the home page. */}}
-  {{- $found := false }}{{ range $upcoming }}{{ if and (not .Params.cancelled) (le (.Date.Format "2006-01-02") $fsIso) }}{{ $found = true }}{{ end }}{{ end }}
+  {{- /* Upcoming: the next monthly general meeting (today included) and, on meeting day, the one after, worked
+         out from the first Sunday; plus any meeting an officer added, all in date order. An officer-added
+         meeting on the same date replaces the worked-out one. site.js does the same again by today's date. */}}
+  {{- $fs2 := "" }}{{ if eq $fsIso $today }}{{ $fs2 = partial "first-sunday-from.html" (dict "from" $fsIso "after" true) }}{{ end }}
+  {{- $fs2Iso := "" }}{{ with $fs2 }}{{ $fs2Iso = .Format "2006-01-02" }}{{ end }}
+  {{- $added := slice }}{{ range $upcoming }}{{ if not .Params.cancelled }}{{ $added = $added | append (.Date.Format "2006-01-02") }}{{ end }}{{ end }}
+  {{- $rows := slice }}
+  {{- range $upcoming }}{{ $rows = $rows | append (dict "date" (.Date.Format "2006-01-02") "html" (partial "meeting-item.html" .)) }}{{ end }}
+  {{- $rows = $rows | append (dict "date" $fsIso "html" (partial "meeting-auto-item.html" (dict "date" $fs "n" 1 "hidden" (in $added $fsIso)))) }}
+  {{- $rows = $rows | append (dict "date" (cond (ne $fs2Iso "") $fs2Iso "9999-12-31") "html" (partial "meeting-auto-item.html" (dict "date" $fs2 "n" 2 "hidden" (or (eq $fs2Iso "") (in $added $fs2Iso))))) }}
   <p class="lede">{{ $c.meets }}. {{ $c.details }}.</p>
 
   <section aria-labelledby="upcoming-heading" class="stack stack--tight">
     <h2 id="upcoming-heading">Upcoming</h2>
-    <p class="muted" data-events-none{{ if $found }} hidden{{ end }}>The next monthly general meeting is on <time data-first-sunday-date datetime="{{ $fsIso }}">{{ $fs.Format "Monday 2 January 2006" }}</time>.</p>
     <ul class="events" data-events-upcoming>
-      {{- range $upcoming }}{{ partial "meeting-item.html" . }}{{ end }}
+      {{- range sort $rows "date" }}{{ .html }}{{ end }}
     </ul>
   </section>
 
