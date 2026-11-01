@@ -220,3 +220,8 @@ main:focus { outline: none; }
 .about__head { display: flex; align-items: center; gap: 14px; }
 .about__seal { flex: none; width: 64px; height: auto; }
 @media (min-width: 900px) { .about__seal { width: 80px; } }
+
+/* Join page: the message to copy when the email button does nothing */
+.copy-box { margin-top: 8px; }
+.copy-box__text { width: 100%; max-width: 68ch; font: inherit; font-size: var(--step--1, 0.9rem); padding: 10px 12px; border: 1px solid var(--rule); border-radius: var(--radius); background: transparent; color: inherit; resize: vertical; }
+.copy-box .btn { justify-self: start; }

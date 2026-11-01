@@ -26,9 +26,20 @@
       <a class="btn" href="https://wa.me/{{ . }}?text={{ $encoded | safeURL }}">Message the chapter on WhatsApp</a>
       {{- end }}
       {{- with $c.email }}
-      <a class="btn btn--quiet" href="mailto:{{ . }}?subject={{ replace (urlquery "Joining the chapter") "+" "%20" | safeURL }}&amp;body={{ $encoded | safeURL }}">Email the chapter</a>
+      {{- $subject := replace (urlquery "Joining the chapter") "+" "%20" }}
+      <a class="btn" href="mailto:{{ . }}?subject={{ $subject | safeURL }}&amp;body={{ $encoded | safeURL }}">Email the chapter</a>
+      {{- /* The email button opens the device's email app; a computer without one set up does nothing.
+             Gmail in the browser works without one. */}}
+      <a class="btn btn--quiet" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to={{ urlquery . }}&amp;su={{ $subject | safeURL }}&amp;body={{ $encoded | safeURL }}" target="_blank" rel="noopener">Write in Gmail</a>
       {{- end }}
     </div>
+    {{- with $c.email }}
+    <div class="stack stack--tight copy-box">
+      <p class="muted">Nothing happened? Write to <strong>{{ . }}</strong> from any email, and copy this message into it:</p>
+      <textarea class="copy-box__text" rows="7" readonly aria-label="The message to copy">{{ $message }}</textarea>
+      <button class="btn btn--quiet" type="button" data-copy hidden>Copy the message</button>
+    </div>
+    {{- end }}
     {{- else }}
     <p class="muted">The chapter's contact details will be added here soon. Until then, please ask a member you know.</p>
     {{- end }}
