@@ -1,7 +1,12 @@
-{{- /* The dates ("YYYY-MM-DD") of meetings an officer has marked Cancelled. The next first Sunday skips them,
-       and site.js reads the same list from the page (body data-cancelled). */ -}}
+{{- /* The first-Sunday dates ("YYYY-MM-DD") with no usual meeting: meetings an officer marked Cancelled, and
+       the first Sunday of each month in Chapter details' "no meeting" months. The worked-out meetings skip
+       them, and site.js reads the same list from the page (body data-cancelled). */ -}}
 {{- $out := slice -}}
 {{- with site.GetPage "/meetings" -}}
   {{- range .Pages }}{{ if .Params.cancelled }}{{ $out = $out | append (.Date.Format "2006-01-02") }}{{ end }}{{ end -}}
+{{- end -}}
+{{- range hugo.Data.chapter.no_meeting_months -}}
+  {{- $first := time.AsTime (printf "%s-01" .) -}}
+  {{- $out = $out | append (($first.AddDate 0 0 (mod (sub 7 (int $first.Weekday)) 7)).Format "2006-01-02") -}}
 {{- end -}}
 {{- return $out -}}

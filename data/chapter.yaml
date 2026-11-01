@@ -5,5 +5,12 @@ name: GIMSUGA
 chapter: Ebonyi State chapter
 covers: Abakaliki, Afikpo, Onueke, Ikwo, Ezza and the rest of Ebonyi State
 meets: The chapter meets on the first Sunday of every month
-details: The time and place are shared in the members' WhatsApp group
+details: The place is shared in the members' WhatsApp group
+# The usual meeting, worked out by the site on the first Sunday of each month: its name and start time
+# ("HH:MM", 24-hour; empty hides the time). Months with no usual meeting ("YYYY-MM") are skipped.
+meeting_name: Chapter general meeting
+meeting_time: "15:00"
+no_meeting_months:
+  - "2026-12"
+  - "2027-01"
 email: gimsugaebonyistatechapter@gmail.com

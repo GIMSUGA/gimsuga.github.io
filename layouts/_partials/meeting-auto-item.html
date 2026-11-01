@@ -1,4 +1,4 @@
-{{- /* A monthly general meeting worked out from the first Sunday (no page of its own). .n is 1 for the next one
+{{- /* The usual meeting (Chapter details) worked out from the first Sunday (no page of its own). .n is 1 for the next one
        (today included) and 2 for the one after, shown only on meeting day. site.js sets the dates again by
        today's date and hides one an officer has added themselves. */ -}}
 {{- $d := .date -}}
@@ -10,7 +10,7 @@
   </div>
   <div class="event__body">
     <p class="card__kicker" data-today="{{ $iso }}"{{ if ne $iso (now.Format "2006-01-02") }} hidden{{ end }}>Today</p>
-    <h3 class="card__title">Monthly general meeting</h3>
-    <p class="muted"><time data-auto-date datetime="{{ $iso }}">{{ with $d }}{{ .Format "Mon 2 Jan 2006" }}{{ end }}</time></p>
+    <h3 class="card__title">{{ hugo.Data.chapter.meeting_name }}</h3>
+    <p class="muted"><time data-auto-date datetime="{{ $iso }}">{{ with $d }}{{ .Format "Mon 2 Jan 2006" }}{{ end }}</time>{{ with partial "usual-meeting-time.html" . }} · {{ . }}{{ end }}</p>
   </div>
 </li>

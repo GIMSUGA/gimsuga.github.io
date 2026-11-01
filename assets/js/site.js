@@ -39,7 +39,7 @@
     return null;
   }
 
-  // The most recent first Sunday before today that was not cancelled: the last monthly general meeting
+  // The most recent first Sunday before today that was not cancelled: the last usual meeting
   function lastFirstSunday(now, cancelled) {
     var y = +now.slice(0, 4), m = +now.slice(5, 7) - 1;
     for (var add = 0; add > -6; add--) {
@@ -90,7 +90,7 @@
         g.querySelector("[data-year-count]").textContent = n + (n === 1 ? " meeting" : " meetings");
         if (i === 0) g.open = true;
       });
-      // The next monthly general meeting (today included) and, on meeting day, the one after, unless an
+      // The next usual meeting (today included) and, on meeting day, the one after, unless an
       // officer added a meeting on that date themselves. Then everything in date order.
       var added = Array.prototype.slice.call(upcoming.querySelectorAll("[data-event-date]:not([data-auto-next]):not([data-cancelled])"))
         .map(function (li) { return li.getAttribute("data-event-date"); });
@@ -114,7 +114,7 @@
         .sort(function (a, b) { return (a.getAttribute("data-event-date") || "").localeCompare(b.getAttribute("data-event-date") || ""); })
         .forEach(function (li) { upcoming.appendChild(li); });
 
-      // The last monthly general meeting, unless an officer added that meeting themselves
+      // The last usual meeting, unless an officer added that meeting themselves
       var last = document.querySelector("[data-last-meeting]");
       if (last) {
         var ld = lastFirstSunday(now, cancelled);

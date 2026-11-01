@@ -32,8 +32,8 @@
     {{- end }}
     <div class="next__item" data-first-sunday{{ if $shown }} hidden{{ end }}>
       <p class="card__kicker" data-today="{{ $fs.Format "2006-01-02" }}"{{ if ne ($fs.Format "2006-01-02") $today }} hidden{{ end }}>Today</p>
-      <p class="next__title">Monthly general meeting</p>
-      <p class="next__when"><time data-first-sunday-date datetime="{{ $fs.Format "2006-01-02" }}">{{ $fs.Format "Monday 2 January 2006" }}</time></p>
+      <p class="next__title">{{ $c.meeting_name }}</p>
+      <p class="next__when"><time data-first-sunday-date datetime="{{ $fs.Format "2006-01-02" }}">{{ $fs.Format "Monday 2 January 2006" }}</time>{{ with partial "usual-meeting-time.html" . }} · {{ . }}{{ end }}</p>
     </div>
     <p class="muted">{{ $c.details }}.</p>
     <a class="link-arrow" href="{{ "meetings/" | relURL }}">All meetings</a>

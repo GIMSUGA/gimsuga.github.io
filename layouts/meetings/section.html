@@ -12,7 +12,7 @@
   {{- $c := hugo.Data.chapter }}
   {{- $fs := partial "first-sunday.html" . }}
   {{- $fsIso := $fs.Format "2006-01-02" }}
-  {{- /* Upcoming: the next monthly general meeting (today included) and, on meeting day, the one after, worked
+  {{- /* Upcoming: the next usual meeting (today included) and, on meeting day, the one after, worked
          out from the first Sunday; plus any meeting an officer added, all in date order. An officer-added
          meeting on the same date replaces the worked-out one. site.js does the same again by today's date. */}}
   {{- $fs2 := "" }}{{ if eq $fsIso $today }}{{ $fs2 = partial "first-sunday-from.html" (dict "from" $fsIso "after" true) }}{{ end }}
@@ -33,7 +33,7 @@
 
   <section aria-labelledby="past-heading" class="stack stack--tight">
     <h2 id="past-heading">Past</h2>
-    {{- /* The last monthly general meeting, worked out from the first Sunday (skipping cancelled ones), unless
+    {{- /* The last usual meeting, worked out from the first Sunday (skipping cancelled ones), unless
            an officer has added that meeting themselves. site.js works it out again by today's date. */}}
     {{- $last := partial "last-first-sunday.html" . }}
     {{- $lastIso := "" }}{{ with $last }}{{ $lastIso = .Format "2006-01-02" }}{{ end }}
@@ -45,7 +45,7 @@
           <span class="event__month" data-last-month>{{ with $last }}{{ .Format "Jan" }}{{ end }}</span>
         </div>
         <div class="event__body">
-          <h3 class="card__title">Monthly general meeting</h3>
+          <h3 class="card__title">{{ $c.meeting_name }}</h3>
           <p class="muted"><time data-last-date datetime="{{ $lastIso }}">{{ with $last }}{{ .Format "Mon 2 Jan 2006" }}{{ end }}</time></p>
         </div>
       </li>

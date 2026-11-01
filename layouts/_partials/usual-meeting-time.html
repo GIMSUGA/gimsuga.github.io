@@ -1,0 +1,7 @@
+{{- /* The usual meeting's start time from Chapter details ("15:00"), shown as "3:00 pm"; empty if not set. */ -}}
+{{- $t := printf "%v" (hugo.Data.chapter.meeting_time | default "") -}}
+{{- $out := "" -}}
+{{- if ge (len $t) 5 -}}
+  {{- $out = (time.AsTime (printf "2000-01-01T%s:00" (substr $t 0 5))).Format "3:04 pm" -}}
+{{- end -}}
+{{- return $out -}}
