@@ -1,0 +1,15 @@
+{{- /* The most recent first Sunday before today that was not cancelled: the last monthly general meeting.
+       site.js works it out again in the browser. */ -}}
+{{- $today := now.Format "2006-01-02" -}}
+{{- $thisMonth := time.AsTime (printf "%s-01" (now.Format "2006-01")) -}}
+{{- $cancelled := partial "meetings-cancelled.html" . -}}
+{{- $out := "" -}}
+{{- range $add := slice 0 -1 -2 -3 -4 -5 -}}
+  {{- if not $out -}}
+    {{- $first := $thisMonth.AddDate 0 $add 0 -}}
+    {{- $sunday := $first.AddDate 0 0 (mod (sub 7 (int $first.Weekday)) 7) -}}
+    {{- $iso := $sunday.Format "2006-01-02" -}}
+    {{- if and (lt $iso $today) (not (in $cancelled $iso)) -}}{{- $out = $sunday -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

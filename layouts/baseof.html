@@ -21,7 +21,7 @@
   <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
   {{- end }}
 </head>
-<body>
+<body data-cancelled="{{ delimit (partial "meetings-cancelled.html" .) " " }}">
   <a class="skip" href="#main">Skip to content</a>
   {{- if site.Params.preview }}
   <p class="preview-banner">Preview: not the live site. Content here may be made up.</p>

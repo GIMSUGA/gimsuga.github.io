@@ -1,17 +1,26 @@
 {{- /* A meeting in a list. Public: name, date, time and, before the meeting, its agenda. The venue and the
-       meeting's notes are shared with members only, never on this site (G-058). */ -}}
+       meeting's notes are shared with members only, never on this site (G-058). A cancelled meeting shows
+       as cancelled, with no time or agenda, and drops off once its date has passed. */ -}}
 {{- $state := partial "meeting-state.html" . -}}
 {{- $time := partial "meeting-time.html" . -}}
-<li class="event card" data-event-date="{{ .Date.Format "2006-01-02" }}" data-state="{{ $state }}">
+{{- $iso := .Date.Format "2006-01-02" -}}
+<li class="event card{{ if .Params.cancelled }} event--cancelled{{ end }}" data-event-date="{{ $iso }}" data-state="{{ $state }}"{{ if .Params.cancelled }} data-cancelled{{ end }}>
   <div class="event__date" aria-hidden="true">
     <span class="event__day">{{ .Date.Format "2" }}</span>
     <span class="event__month">{{ .Date.Format "Jan" }}</span>
   </div>
   <div class="event__body">
+    {{- if .Params.cancelled }}
+    <p class="card__kicker">Cancelled</p>
+    {{- else }}
+    <p class="card__kicker" data-today="{{ $iso }}"{{ if ne $iso (now.Format "2006-01-02") }} hidden{{ end }}>Today</p>
+    {{- end }}
     <h3 class="card__title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-    <p class="muted"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Mon 2 Jan 2006" }}</time>{{ with $time }} · {{ . }}{{ end }}</p>
+    <p class="muted"><time datetime="{{ $iso }}">{{ .Date.Format "Mon 2 Jan 2006" }}</time>{{ if not .Params.cancelled }}{{ with $time }} · {{ . }}{{ end }}{{ end }}</p>
+    {{- if not .Params.cancelled }}
     {{- with .Params.agenda }}
     <details class="event__more" data-when="upcoming"><summary>Agenda</summary><p class="agenda">{{ . }}</p></details>
+    {{- end }}
     {{- end }}
   </div>
 </li>

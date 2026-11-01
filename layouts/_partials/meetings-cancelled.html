@@ -1,0 +1,7 @@
+{{- /* The dates ("YYYY-MM-DD") of meetings an officer has marked Cancelled. The next first Sunday skips them,
+       and site.js reads the same list from the page (body data-cancelled). */ -}}
+{{- $out := slice -}}
+{{- with site.GetPage "/meetings" -}}
+  {{- range .Pages }}{{ if .Params.cancelled }}{{ $out = $out | append (.Date.Format "2006-01-02") }}{{ end }}{{ end -}}
+{{- end -}}
+{{- return $out -}}

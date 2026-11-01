@@ -2,7 +2,8 @@
 {{- $c := hugo.Data.chapter -}}
 {{- $today := now.Format "2006-01-02" -}}
 {{- $upcoming := slice -}}
-{{- range (site.GetPage "/meetings").Pages.ByDate }}{{ if ge (.Date.Format "2006-01-02") $today }}{{ $upcoming = $upcoming | append . }}{{ end }}{{ end -}}
+{{- /* Cancelled meetings never show on the home card; the next first Sunday skips them too. */ -}}
+{{- range (site.GetPage "/meetings").Pages.ByDate }}{{ if and (ge (.Date.Format "2006-01-02") $today) (not .Params.cancelled) }}{{ $upcoming = $upcoming | append . }}{{ end }}{{ end -}}
 <section class="hero">
   <div class="wrap hero__inner">
     <p class="eyebrow eyebrow--light">{{ $c.name }}</p>
@@ -24,11 +25,13 @@
     {{- range $m := $upcoming }}
     {{- $time := partial "meeting-time.html" $m }}
     <div class="next__item" data-event-date="{{ $m.Date.Format "2006-01-02" }}"{{ if ne $m.RelPermalink $shown }} hidden{{ end }}>
+      <p class="card__kicker" data-today="{{ $m.Date.Format "2006-01-02" }}"{{ if ne ($m.Date.Format "2006-01-02") $today }} hidden{{ end }}>Today</p>
       <p class="next__title"><a href="{{ $m.RelPermalink }}">{{ $m.Title }}</a></p>
       <p class="next__when"><time datetime="{{ $m.Date.Format "2006-01-02" }}">{{ $m.Date.Format "Monday 2 January 2006" }}</time>{{ with $time }} · {{ . }}{{ end }}</p>
     </div>
     {{- end }}
     <div class="next__item" data-first-sunday{{ if $shown }} hidden{{ end }}>
+      <p class="card__kicker" data-today="{{ $fs.Format "2006-01-02" }}"{{ if ne ($fs.Format "2006-01-02") $today }} hidden{{ end }}>Today</p>
       <p class="next__title">Monthly general meeting</p>
       <p class="next__when"><time data-first-sunday-date datetime="{{ $fs.Format "2006-01-02" }}">{{ $fs.Format "Monday 2 January 2006" }}</time></p>
     </div>

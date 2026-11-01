@@ -6,12 +6,21 @@
 <article class="wrap page" data-event-date="{{ .Date.Format "2006-01-02" }}" data-state="{{ $state }}">
   <a class="link-back" href="{{ "meetings/" | relURL }}">All meetings</a>
   <header class="stack stack--tight">
+    {{- if .Params.cancelled }}
+    <p class="card__kicker">Cancelled</p>
+    {{- else }}
     <p class="card__kicker" data-when="upcoming">Upcoming meeting</p>
     <p class="card__kicker" data-when="past">Past meeting</p>
+    {{- end }}
     <h1>{{ .Title }}</h1>
-    <p class="next__when"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Monday 2 January 2006" }}</time>{{ with $time }} · {{ . }}{{ end }}</p>
+    <p class="next__when"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Monday 2 January 2006" }}</time>{{ if not .Params.cancelled }}{{ with $time }} · {{ . }}{{ end }}{{ end }}</p>
+    {{- if .Params.cancelled }}
+    <p>This meeting is cancelled.</p>
+    {{- else }}
     <p class="muted">{{ hugo.Data.chapter.details }}.</p>
+    {{- end }}
   </header>
+  {{- if not .Params.cancelled }}
   <section aria-labelledby="agenda-heading" data-when="upcoming">
     <h2 id="agenda-heading">Agenda</h2>
     {{- with .Params.agenda }}
@@ -20,5 +29,6 @@
     <p class="muted">Agenda to come.</p>
     {{- end }}
   </section>
+  {{- end }}
 </article>
 {{ end }}

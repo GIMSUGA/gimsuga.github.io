@@ -2,7 +2,8 @@
 {{- $today := now.Format "2006-01-02" -}}
 {{- $upcoming := slice }}{{ $past := slice -}}
 {{- range .Pages.ByDate }}{{ if ge (.Date.Format "2006-01-02") $today }}{{ $upcoming = $upcoming | append . }}{{ end }}{{ end -}}
-{{- range .Pages.ByDate.Reverse }}{{ if lt (.Date.Format "2006-01-02") $today }}{{ $past = $past | append . }}{{ end }}{{ end -}}
+{{- /* Past: meetings that happened. A cancelled meeting drops off once its date has passed. */ -}}
+{{- range .Pages.ByDate.Reverse }}{{ if and (lt (.Date.Format "2006-01-02") $today) (not .Params.cancelled) }}{{ $past = $past | append . }}{{ end }}{{ end -}}
 {{- /* Past meetings are grouped by year, newest year first. The newest year is open; earlier years fold
        away, so the page stays short however many years of meetings build up. */ -}}
 {{- $years := slice }}{{ range $past }}{{ $y := .Date.Format "2006" }}{{ if not (in $years $y) }}{{ $years = $years | append $y }}{{ end }}{{ end -}}
@@ -10,6 +11,10 @@
   <h1>{{ .Title }}</h1>
   {{- $c := hugo.Data.chapter }}
   {{- $fs := partial "first-sunday.html" . }}
+  {{- $fsIso := $fs.Format "2006-01-02" }}
+  {{- /* An officer-added meeting that is not cancelled and no later than the next first Sunday stands in for
+         the "next monthly general meeting" line, as on the home page. */}}
+  {{- $found := false }}{{ range $upcoming }}{{ if and (not .Params.cancelled) (le (.Date.Format "2006-01-02") $fsIso) }}{{ $found = true }}{{ end }}{{ end }}
   <p class="lede">{{ $c.meets }}. {{ $c.details }}.</p>
 
   <section aria-labelledby="upcoming-heading" class="stack stack--tight">
@@ -17,11 +22,28 @@
     <ul class="events" data-events-upcoming>
       {{- range $upcoming }}{{ partial "meeting-item.html" . }}{{ end }}
     </ul>
-    <p class="muted" data-events-none{{ if $upcoming }} hidden{{ end }}>The next monthly general meeting is on <time data-first-sunday-date datetime="{{ $fs.Format "2006-01-02" }}">{{ $fs.Format "Monday 2 January 2006" }}</time>.</p>
+    <p class="muted" data-events-none{{ if $found }} hidden{{ end }}>The next monthly general meeting is on <time data-first-sunday-date datetime="{{ $fsIso }}">{{ $fs.Format "Monday 2 January 2006" }}</time>.</p>
   </section>
 
   <section aria-labelledby="past-heading" class="stack stack--tight">
     <h2 id="past-heading">Past</h2>
+    {{- /* The last monthly general meeting, worked out from the first Sunday (skipping cancelled ones), unless
+           an officer has added that meeting themselves. site.js works it out again by today's date. */}}
+    {{- $last := partial "last-first-sunday.html" . }}
+    {{- $lastIso := "" }}{{ with $last }}{{ $lastIso = .Format "2006-01-02" }}{{ end }}
+    {{- $lastAdded := false }}{{ range $past }}{{ if eq (.Date.Format "2006-01-02") $lastIso }}{{ $lastAdded = true }}{{ end }}{{ end }}
+    <ul class="events events--past" data-last-meeting-list>
+      <li class="event card" data-last-meeting="{{ $lastIso }}"{{ if or (eq $lastIso "") $lastAdded }} hidden{{ end }}>
+        <div class="event__date" aria-hidden="true">
+          <span class="event__day" data-last-day>{{ with $last }}{{ .Format "2" }}{{ end }}</span>
+          <span class="event__month" data-last-month>{{ with $last }}{{ .Format "Jan" }}{{ end }}</span>
+        </div>
+        <div class="event__body">
+          <h3 class="card__title">Monthly general meeting</h3>
+          <p class="muted"><time data-last-date datetime="{{ $lastIso }}">{{ with $last }}{{ .Format "Mon 2 Jan 2006" }}{{ end }}</time></p>
+        </div>
+      </li>
+    </ul>
     <div class="years" data-events-past>
       {{- range $i, $y := $years }}
       {{- $inYear := where $past "Date.Year" (int $y) }}
@@ -33,7 +55,7 @@
       </details>
       {{- end }}
     </div>
-    <p class="muted" data-events-past-none{{ if $past }} hidden{{ end }}>No past meetings yet.</p>
+    <p class="muted" data-events-past-none{{ if or $past (and (ne $lastIso "") (not $lastAdded)) }} hidden{{ end }}>No past meetings yet.</p>
   </section>
 </div>
 {{ end }}

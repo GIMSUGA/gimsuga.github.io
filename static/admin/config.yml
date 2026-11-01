@@ -35,7 +35,7 @@ collections:
     label_singular: Meeting
     description: >-
       Chapter meetings: the name, date, time and agenda, all public. The site shows the next first Sunday by
-      itself, so add a meeting only to give its time or agenda, or for a meeting on another day. The place and
+      itself, so add a meeting only to give its time or agenda, for a meeting on another day, or to cancel one. The place and
       the meeting's notes go to members on WhatsApp, never here: everything on this site is public, forever.
     folder: content/meetings
     create: true
@@ -60,9 +60,20 @@ collections:
         format: YYYY-MM-DD
       - name: time
         label: Start time
+        hint: Leave empty if it isn't set yet, or if the meeting is cancelled.
         widget: datetime
         type: time
         format: HH:mm
+        required: false
+      - name: cancelled
+        label: Cancelled
+        hint: >-
+          Tick to cancel this meeting. The site shows it as cancelled and the next meeting moves to the following
+          first Sunday. To cancel a usual first-Sunday meeting, add a meeting on that date and tick this. No reason
+          is shown; tell members on WhatsApp.
+        widget: boolean
+        default: false
+        required: false
       - name: agenda
         label: "Agenda: shown before the meeting"
         hint: One item per line. Public, so nothing about people or money. Leave empty if it isn't ready yet.
