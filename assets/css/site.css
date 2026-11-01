@@ -221,6 +221,3 @@ main:focus { outline: none; }
 .about__seal { flex: none; width: 64px; height: auto; }
 @media (min-width: 900px) { .about__seal { width: 80px; } }
 
-/* Join page: the button that copies the message when the email button does nothing */
-.copy-box { margin-top: 8px; }
-.copy-box .btn { justify-self: start; }

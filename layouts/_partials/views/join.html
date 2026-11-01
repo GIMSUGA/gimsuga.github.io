@@ -28,16 +28,11 @@
       {{- with $c.email }}
       {{- $subject := replace (urlquery "Joining the chapter") "+" "%20" }}
       <a class="btn" href="mailto:{{ . }}?subject={{ $subject | safeURL }}&amp;body={{ $encoded | safeURL }}">Email the chapter</a>
+      {{- /* For a device whose email app doesn't open: copies the message, with the address on top, to paste
+             into any email. The address is never shown as text on the page. Shown only where copying works. */}}
+      <button class="btn btn--quiet" type="button" data-copy hidden data-copy-text="{{ printf "To: %s\nSubject: Joining the chapter\n\n%s" . $message }}">Copy the message</button>
       {{- end }}
     </div>
-    {{- /* For a device whose email app doesn't open: copy the message, with the address on top, to paste into
-           any email. The address is never shown as text on the page. Shown only where copying works. */}}
-    {{- with $c.email }}
-    <div class="stack stack--tight copy-box" data-copy-box hidden>
-      <p class="muted">Email didn't open? Copy the message, with the chapter's address, and paste it into any email.</p>
-      <button class="btn btn--quiet" type="button" data-copy data-copy-text="{{ printf "To: %s\nSubject: Joining the chapter\n\n%s" . $message }}">Copy the message</button>
-    </div>
-    {{- end }}
     {{- else }}
     <p class="muted">The chapter's contact details will be added here soon. Until then, please ask a member you know.</p>
     {{- end }}

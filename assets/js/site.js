@@ -85,10 +85,9 @@
   }
 
   // Join page: a button that copies the ready-made message (shown only where copying works)
-  var box = document.querySelector("[data-copy-box]");
   var copy = document.querySelector("[data-copy]");
-  if (box && copy && navigator.clipboard && window.isSecureContext) {
-    box.hidden = false;
+  if (copy && navigator.clipboard && window.isSecureContext) {
+    copy.hidden = false;
     copy.addEventListener("click", function () {
       navigator.clipboard.writeText(copy.getAttribute("data-copy-text")).then(function () {
         copy.textContent = "Copied. Paste it into an email";
