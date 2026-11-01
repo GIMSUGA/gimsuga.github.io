@@ -10,7 +10,7 @@
     <p class="card__kicker" data-when="past">Past meeting</p>
     <h1>{{ .Title }}</h1>
     <p class="next__when"><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Monday 2 January 2006" }}</time>{{ with $time }} · {{ . }}{{ end }}</p>
-    <p class="muted">The place is shared with members.</p>
+    <p class="muted">{{ hugo.Data.chapter.details }}.</p>
   </header>
   <section aria-labelledby="agenda-heading" data-when="upcoming">
     <h2 id="agenda-heading">Agenda</h2>

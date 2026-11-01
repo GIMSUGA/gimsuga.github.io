@@ -120,15 +120,15 @@ collections:
           - name: officers
             label: Officers
             label_singular: Officer
-            hint: In the order they should appear. Names appear only with the officer's agreement.
+            hint: In the order they should appear. Enter only what each officer agreed to show; leave the name empty to show the office alone. No photos. Names stay in the site's public history even after a change.
             widget: list
             root: true
             summary: "{{office}}: {{title}} {{first_name}} {{surname}}"
             fields:
               - { name: office, label: Office, widget: string, hint: "For example, Secretary or Technical Officer." }
               - { name: title, label: Title, widget: string, required: false, hint: "Optional. For example, Engr., Dr., Barr., Chief." }
-              - { name: first_name, label: First name, widget: string }
-              - { name: surname, label: Surname, widget: string }
+              - { name: first_name, label: First name, widget: string, required: false }
+              - { name: surname, label: Surname, widget: string, required: false }
 
   - name: chapter
     label: Chapter details
@@ -150,6 +150,10 @@ collections:
           - name: meets
             label: When the chapter meets
             hint: For example, The chapter meets on the first Sunday of every month. Never the place.
+            widget: string
+          - name: details
+            label: Where members get the time and place
+            hint: Shown after "When the chapter meets". Never the place itself, and never a WhatsApp group link.
             widget: string
           - name: whatsapp
             label: Chapter WhatsApp number

@@ -7,11 +7,15 @@
   <ul class="people">
     {{- range hugo.Data.officers }}
     <li class="person card">
-      {{- $full := trim (printf "%s %s %s" (.title | default "") .first_name .surname) " " }}
-      <span class="avatar" aria-hidden="true">{{ substr .first_name 0 1 }}</span>
+      {{- /* Only what the officer agreed to show; an office with no name shows alone. No photos (G-060). */}}
+      {{- $name := trim (printf "%s %s" (.first_name | default "") (.surname | default "")) " " }}
+      {{- $full := cond (ne $name "") (trim (printf "%s %s" (.title | default "") $name) " ") "" }}
+      <span class="avatar" aria-hidden="true">{{ substr (cond (ne $name "") $name .office) 0 1 }}</span>
       <div>
         <p class="person__role">{{ .office }}</p>
-        <p class="card__title">{{ $full }}</p>
+        {{- with $full }}
+        <p class="card__title">{{ . }}</p>
+        {{- end }}
       </div>
     </li>
     {{- end }}

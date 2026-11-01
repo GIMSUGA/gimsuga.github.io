@@ -10,7 +10,7 @@
   <h1>{{ .Title }}</h1>
   {{- $c := hugo.Data.chapter }}
   {{- $fs := partial "first-sunday.html" . }}
-  <p class="lede">{{ $c.meets }}.</p>
+  <p class="lede">{{ $c.meets }}. {{ $c.details }}.</p>
 
   <section aria-labelledby="upcoming-heading" class="stack stack--tight">
     <h2 id="upcoming-heading">Upcoming</h2>

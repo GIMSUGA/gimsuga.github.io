@@ -32,7 +32,7 @@
       <p class="next__title">Monthly general meeting</p>
       <p class="next__when"><time data-first-sunday-date datetime="{{ $fs.Format "2006-01-02" }}">{{ $fs.Format "Monday 2 January 2006" }}</time></p>
     </div>
-    <p class="muted">The time and place are shared with members.</p>
+    <p class="muted">{{ $c.details }}.</p>
     <a class="link-arrow" href="{{ "meetings/" | relURL }}">All meetings</a>
   </section>
 
@@ -41,7 +41,7 @@
       <img class="about__seal" src="{{ "images/brand/logo.png" | relURL }}" width="112" height="103" alt="The GIMSUGA seal" loading="lazy">
       <h2 id="about-heading">About the chapter</h2>
     </div>
-    <p>The {{ $c.chapter }} brings together graduates of Imo State University across the state. {{ $c.meets }}.</p>
+    <p>The {{ $c.chapter }} brings together graduates of Imo State University across the state. {{ $c.meets }}. {{ $c.details }}.</p>
     <p>Membership of {{ $c.name }} comes through a chapter. New members are introduced by an existing member.</p>
     <a class="link-arrow" href="{{ "why-belong/" | relURL }}">Why belong</a>
   </section>
