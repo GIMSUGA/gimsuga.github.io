@@ -2,6 +2,8 @@
 <footer class="site-footer">
   <div class="wrap site-footer__inner">
     <p>© {{ now.Format "2006" }} {{ $c.name }} {{ $c.chapter }}</p>
-    <p><a href="{{ "privacy/" | relURL }}">Privacy</a></p>
+    {{- /* Editors: the chapter's editor (Sveltia CMS). Relative, so the preview opens the preview editor and the
+           live site opens the live one, with no change at launch. Signing in needs an invited GitHub account. */}}
+    <p><a href="{{ "privacy/" | relURL }}">Privacy</a> · <a href="{{ "admin/" | relURL }}" rel="nofollow">Editors</a></p>
   </div>
 </footer>
