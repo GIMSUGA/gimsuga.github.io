@@ -19,10 +19,10 @@
 
   <section aria-labelledby="upcoming-heading" class="stack stack--tight">
     <h2 id="upcoming-heading">Upcoming</h2>
+    <p class="muted" data-events-none{{ if $found }} hidden{{ end }}>The next monthly general meeting is on <time data-first-sunday-date datetime="{{ $fsIso }}">{{ $fs.Format "Monday 2 January 2006" }}</time>.</p>
     <ul class="events" data-events-upcoming>
       {{- range $upcoming }}{{ partial "meeting-item.html" . }}{{ end }}
     </ul>
-    <p class="muted" data-events-none{{ if $found }} hidden{{ end }}>The next monthly general meeting is on <time data-first-sunday-date datetime="{{ $fsIso }}">{{ $fs.Format "Monday 2 January 2006" }}</time>.</p>
   </section>
 
   <section aria-labelledby="past-heading" class="stack stack--tight">
