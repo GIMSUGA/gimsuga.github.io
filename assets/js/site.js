@@ -85,12 +85,14 @@
   }
 
   // Join page: a button that copies the ready-made message (shown only where copying works)
+  var box = document.querySelector("[data-copy-box]");
   var copy = document.querySelector("[data-copy]");
-  var text = document.querySelector(".copy-box__text");
-  if (copy && text && navigator.clipboard) {
-    copy.hidden = false;
+  if (box && copy && navigator.clipboard && window.isSecureContext) {
+    box.hidden = false;
     copy.addEventListener("click", function () {
-      navigator.clipboard.writeText(text.value).then(function () { copy.textContent = "Copied"; });
+      navigator.clipboard.writeText(copy.getAttribute("data-copy-text")).then(function () {
+        copy.textContent = "Copied. Paste it into an email";
+      });
     });
   }
 
